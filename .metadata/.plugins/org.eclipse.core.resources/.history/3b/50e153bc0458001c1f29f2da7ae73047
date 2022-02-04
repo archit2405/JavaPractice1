@@ -1,0 +1,75 @@
+package test;
+import java.util.*;
+public class tree
+{
+	public static class Node
+	{
+		int data;
+		Node left,right;
+		Node(int data)
+		{
+			this.data=data;
+			right=left=null;
+		}
+	}
+	public static Node root=null;
+	public static Node insertInTree(int data,Node node)
+	{
+		if(node==null)
+		{
+			return new Node(data);
+		}
+		if(node.data>data)
+		{
+			node.left=insertInTree(data,node.left);
+		}
+		else if(node.data<data)
+		{
+			node.right=insertInTree(data,node.right);
+		}
+		else
+			return node;
+		return node;
+	}
+	static int diameter=0;
+	static int maxdiameter=0;
+	public static int getDiameter(Node node)
+	{
+		if(node==null)
+			return 0;
+		int left_height=getDiameter(node.left);
+		int right_height=getDiameter(node.right);
+		diameter=left_height+right_height+1;
+		if(diameter>maxdiameter)
+			maxdiameter=diameter;
+		return 1+Math.max(left_height, right_height);
+	}
+	public static void inOrder(Node node)
+	{
+		if(node!=null)
+		{
+			inOrder(node.left);
+			System.out.print(node.data+" ");
+			inOrder(node.right);
+		}
+	}
+	
+	public static void main(String args[])
+	{
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Enter the number of elements to be inserted");
+		int n;
+		n=sc.nextInt();
+		for(int i=0;i<n;i++)
+		{
+			root=insertInTree(sc.nextInt(),root);
+		}
+		inOrder(root);
+		System.out.println();
+		int a=getDiameter(root);
+		System.out.println(maxdiameter);
+	
+	
+	}
+
+}

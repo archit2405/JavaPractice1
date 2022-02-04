@@ -1,0 +1,64 @@
+package Graph;
+import java.util.*;
+public class AlienDictionary {
+	public static Scanner sc=new Scanner(System.in);
+	
+	public static HashMap<Character,ArrayList<Character>>graph=new HashMap<Character,ArrayList<Character>>();
+	public static void addEdge(char c,char d)
+	{
+		if(graph.get(c)==null)
+		{
+			ArrayList<Character>list=new ArrayList<Character>();
+			list.add(d);
+			graph.put(c,list);
+		}
+		else
+		{
+			ArrayList<Character>list=graph.get(c);
+			list.add(d);
+			graph.put(c, list);
+		}
+	}
+	
+	public static void findAlphabeticalOrder(String[] str)
+	{
+		
+		for(int i=0;i<str.length-1;i++)
+		{
+			String word1,word2;
+			word1=str[i];
+			word2=str[i+1];
+			for(int j=0;j<Math.min(word1.length(),word2.length());j++)
+			{
+				if(word1.charAt(j)!=word2.charAt(j))
+				{
+					addEdge(word1.charAt(j),word2.charAt(j));
+				}
+			}
+		}
+	}
+	public static void main(String args[])
+	{
+		int n;
+		System.out.println("Enter the number of words");
+		n=sc.nextInt();
+		String[] str=new String[n];
+		for(int i=0;i<=n;i++)
+		{
+			str[i]=sc.nextLine();
+		}
+		findAlphabeticalOrder(str);
+		for(Map.Entry<Character,ArrayList<Character>>m:graph.entrySet())
+		{
+			System.out.print(m.getKey()+"  ");
+			ArrayList<Character>list=graph.get(m.getKey());
+			for(int i=0;i<list.size();i++)
+			{
+				System.out.print(list.get(i)+" ");
+			}
+			System.out.println();
+			
+		}
+	}
+
+}

@@ -1,0 +1,87 @@
+package Graph;
+import java.util.*;
+public class SnakeLadderProblem {
+	public static Scanner sc=new Scanner(System.in);
+	public static int minThrow=Integer.MAX_VALUE;
+	public static int Row=5;
+	public static int Col=6;
+	
+	public static void findMinimumDiceThrow(int[][]matrix,int row,int col,int t)
+	{
+		t++;
+		if(row==0 && col==5)
+		{
+			if(minThrow<t)
+			{
+				minThrow=t;
+			}
+			return;
+		}
+		if(matrix[row][col]!=-1)
+		{
+			int value=matrix[row][col];
+			if(value>=1 && value<=6)
+			{
+				row=4;
+			}
+			else if(value>=7 && value<=12)
+			{
+				row=3;
+			}
+			else if(value>=13 && value<=18)
+			{
+				row=2;
+			}
+			else if(value>=19 && value<=24)
+			{
+				row=1;
+			}
+			else
+			{
+				row=0;
+			}
+			for(int i=0;i<Col;i++)
+			{
+				if(matrix[row][i]==value)
+				{
+					col=i;
+				}
+			}
+			findMinimumDiceThrow(matrix,row,col,t);
+		}
+		
+			if(row%2==0 && col==5)
+			{
+				row++;
+			}
+			if(row%2!=0 && col==0)
+			{
+				row++;
+			}
+			if(row%2!=0)
+			{
+				findMinimumDiceThrow(matrix,row,col-1,t);
+			}
+			else
+			{
+				findMinimumDiceThrow(matrix,row,col+1,t);
+			}
+		
+	}
+	
+	public static void main(String args[])
+	{
+		System.out.println("Takimg the board input...Please Wait");
+		int[][]matrix=
+			{
+					{-1,-1,1,-1,-1,-1},
+					{-1,-1,-1,9,29,7},
+					{-1,-1,-1,-1,4,-1},
+					{-1,26,-1,-1,-1,-1},
+					{-1,-1,22,-1,8,-1}
+			};
+		findMinimumDiceThrow(matrix,4,0,0);
+		System.out.println(minThrow);
+		
+	}
+}

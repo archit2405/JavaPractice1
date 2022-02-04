@@ -1,0 +1,106 @@
+package test;
+import java.util.*;
+public class Heap {
+	public static Scanner sc=new Scanner(System.in);
+	public static void swap(int[]array,int index1,int index2)
+	{
+		int temp=array[index1];
+		array[index1]=array[index2];
+		array[index2]=temp;
+	}
+	public static void maxHeapify(int[]array,int index)
+	{
+		int i=index;
+		while(true)
+		{
+			if(array[i]<array[(i-1)/2])
+			{
+				swap(array,i,(i-1)/2);
+			}
+			else
+				break;
+		}
+	}
+	public static void minHeapify(int[]array,int index)
+	{
+		int i=index;
+		while(true)
+		{
+			if(array[i]>array[(i-1)/2])
+			{
+				swap(array,i,(i-1)/2);
+			}
+			else
+				break;
+		}
+	}
+	public static void insertMaxHeap(int[]array)
+	{
+		System.out.println("enter the element to inserted");
+		int element=sc.nextInt();
+		int count=0;
+		while(array[count]!=0)
+		{
+			count++;
+		}
+		if(element>array[(count-1)/2])
+			array[count]=element;
+		else
+		{
+			array[count]=element;
+			maxHeapify(array,count);
+		}
+	}
+	public static void insertMinHeap(int[]array)
+	{
+		System.out.println("enter the element to inserted");
+		int element=sc.nextInt();
+		int count=0;
+		while(array[count]!=0)
+		{
+			count++;
+		}
+		if(element<array[(count-1)/2])
+			array[count]=element;
+		else
+		{
+			array[count]=element;
+			minHeapify(array,count);
+		}
+	}
+	public static void main(String args[])
+	{
+		int[]array1=new int[20];
+		int[]array2=new int[20];
+		System.out.println("1:min heap,2:max heap,3.exit");
+		int type=sc.nextInt();
+		while(true)
+		{
+		
+		if(type==3)
+			break;
+		System.out.println("1:Insert,2.end");
+		int operation=sc.nextInt();
+		if(operation==2)
+			break;
+		if(type==1&&operation==1)
+		{
+			insertMinHeap(array1);
+		}
+		if(type==2&&operation==1)
+		{
+			insertMaxHeap(array2);
+		}
+		}
+		for(int i=0;array1[i]!=0;i++)
+		{
+			System.out.print(array1[i]+" ");
+		}
+		for(int i=0;array2[i]!=0;i++)
+		{
+			System.out.print(array2[i]+" ");
+		}
+		
+	}
+	
+}

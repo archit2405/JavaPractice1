@@ -1,0 +1,6 @@
+package Graph;//do it by using BFS(BFS is a logic. it is not only related to graph)
+import java.util.*;
+public class SnakeLadderProblem {
+	
+
+}

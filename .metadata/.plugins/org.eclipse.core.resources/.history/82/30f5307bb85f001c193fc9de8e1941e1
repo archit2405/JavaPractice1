@@ -1,0 +1,24 @@
+package test;
+import java.util.*;
+public class Heap {
+	public static Scanner sc=new Scanner(System.in);
+	public static void insertMinHeap(int[]array)
+	{
+		System.out.println("enter the element to inserted");
+		int element=sc.nextInt();
+	}
+	public static void main(String args[])
+	{
+		int[]array=new int[20];
+		System.out.println("1:min heap,2:max heap");
+		int type=sc.nextInt();
+		System.out.println("1:Insert");
+		int operation=sc.nextInt();
+		if(type==1&&operation==1)
+		{
+			insertMinHeap(array);
+		}
+		System.out.println(array);
+	}
+	
+}

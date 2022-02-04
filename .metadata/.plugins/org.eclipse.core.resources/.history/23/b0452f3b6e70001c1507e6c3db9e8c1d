@@ -1,0 +1,65 @@
+package test;
+import java.util.*;
+import java.util.LinkedList;
+public class SlidinWindowProblem {
+	
+	public static Scanner sc=new Scanner(System.in);
+	
+	public static void slidingWindowProblem(int[]array,int w)
+	{
+		Deque<Integer>q=new LinkedList<Integer>();
+		int i=0;
+		q.addLast(array[i]);
+		i++;
+		while(i<array.length)
+		{
+			int j=0;
+			while(j<w)
+			{
+				if(array[i]<q.peekLast())
+				{
+					q.addLast(i);
+				}
+				else
+				{
+					while((!q.isEmpty()) && q.peekLast()<array[i])
+					{
+						q.removeLast();
+						if(q.isEmpty())
+						{
+							q.addLast(i);
+							break;
+						}
+					}
+				}
+				i++;
+				j++;
+			}
+			if(q.peekFirst()>=((i-w)+1))
+			{
+				System.out.println(q.peekFirst());
+			}
+			else
+			{
+				System.out.println(q.peekFirst());
+				q.removeFirst();
+			}
+		}
+	
+	}
+	
+	public static void main(String args[])
+	{
+		System.out.println("Enter the length of the array");
+		int n=sc.nextInt();
+		int[]array=new int[n];
+		System.out.println("Enter the elements of the array");
+		for(int i=0;i<n;i++)
+		{
+			array[i]=sc.nextInt();
+		}System.out.println("enter the window size");
+		int w=sc.nextInt();
+		slidingWindowProblem(array,w);
+	}
+
+}

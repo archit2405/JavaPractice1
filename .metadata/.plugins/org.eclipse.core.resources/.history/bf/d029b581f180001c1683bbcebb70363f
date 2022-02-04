@@ -1,0 +1,174 @@
+package Graph;
+import java.util.*;
+public class SnakeLadderProblem {
+	public static Scanner sc=new Scanner(System.in);
+	public static int minThrow=Integer.MAX_VALUE;
+	public static int Row=5;
+	public static int Col=6;
+	public static boolean isValid(int row,int col)
+	{
+		if(row>=0 && row<Row)
+		{
+			if(col>=0 && col<Col)
+				return true;
+			else
+				return false;
+		}
+		return false;
+	}
+	
+	public static void findMinimumDiceThrow(int[][]matrix,int row,int col,int t,boolean[][]visited)
+	{
+		if(isValid(row,col)==false)
+			return;
+		if(visited[row][col]==true)
+		{
+			return;
+		}
+		if(row==0 && col==5)
+		{
+			if(minThrow>t)
+			{
+				minThrow=t;
+			}
+			return;
+		}
+		visited[row][col]=true;
+		if(matrix[row][col]!=-1)
+		{
+			int value=matrix[row][col];
+			int localrow=0;
+			int localcol=0;
+			if(value>=1 && value<=6)
+			{
+				localrow=4;
+				if(value==1)
+					localcol=0;
+				if(value==2)
+					localcol=1;
+				if(value==3)
+					localcol=2;
+				if(value==4)
+					localcol=3;
+				if(value==5)
+					localcol=4;
+				if(value==6)
+					localcol=5;
+				
+			}
+			else if(value>=7 && value<=12)
+			{
+				localrow=3;
+				if(value==7)
+					localcol=5;
+				if(value==8)
+					localcol=4;
+				if(value==9)
+					localcol=3;
+				if(value==10)
+					localcol=2;
+				if(value==11)
+					localcol=1;
+				if(value==12)
+					localcol=0;
+			}
+			else if(value>=13 && value<=18)
+			{
+				localrow=2;
+				if(value==13)
+					localcol=0;
+				if(value==14)
+					localcol=1;
+				if(value==15)
+					localcol=2;
+				if(value==16)
+					localcol=3;
+				if(value==17)
+					localcol=4;
+				if(value==18)
+					localcol=5;
+			}
+			else if(value>=19 && value<=24)
+			{
+				localrow=1;
+				if(value==19)
+					localcol=5;
+				if(value==20)
+					localcol=4;
+				if(value==21)
+					localcol=3;
+				if(value==22)
+					localcol=2;
+				if(value==23)
+					localcol=1;
+				if(value==24)
+					localcol=0;
+			}
+			else
+			{
+				localrow=0;
+				if(value==25)
+					localcol=0;
+				if(value==26)
+					localcol=1;
+				if(value==27)
+					localcol=2;
+				if(value==28)
+					localcol=3;
+				if(value==29)
+					localcol=4;
+				if(value==30)
+					localcol=5;
+			}
+			
+			findMinimumDiceThrow(matrix,localrow,localcol,t,visited);
+		}
+		
+			if(row%2==0 && col==5)
+			{
+				row--;
+			}
+			if(row%2!=0 && col==0)
+			{
+				row--;
+			}
+			if(row%2!=0)
+			{
+				findMinimumDiceThrow(matrix,row,col-1,t+1,visited);
+				findMinimumDiceThrow(matrix,row,col-2,t+1,visited);
+				findMinimumDiceThrow(matrix,row,col-3,t+1,visited);
+				findMinimumDiceThrow(matrix,row,col-4,t+1,visited);
+				findMinimumDiceThrow(matrix,row,col-5,t+1,visited);
+				findMinimumDiceThrow(matrix,row-1,0,t+1,visited);
+				
+			}
+			else
+			{
+				findMinimumDiceThrow(matrix,row,col+1,t+1,visited);
+				findMinimumDiceThrow(matrix,row,col+2,t+1,visited);
+				findMinimumDiceThrow(matrix,row,col+3,t+1,visited);
+				findMinimumDiceThrow(matrix,row,col+4,t+1,visited);
+				findMinimumDiceThrow(matrix,row,col+5,t+1,visited);
+				findMinimumDiceThrow(matrix,row-1,5,t+1,visited);
+				
+			}
+		
+	}
+	
+	public static void main(String args[])
+	{
+		System.out.println("Taking the board input...Please Wait");
+		int[][]matrix=
+			{
+					{-1,-1,1,-1,-1,-1},
+					{-1,-1,-1,9,29,7},
+					{-1,-1,-1,-1,4,-1},
+					{-1,26,-1,-1,-1,-1},
+					{-1,-1,22,-1,8,-1}
+			};
+		boolean[][]visited=new boolean[5][6];
+		findMinimumDiceThrow(matrix,4,0,-1,visited);
+		System.out.println(minThrow-1);
+		
+	}
+}

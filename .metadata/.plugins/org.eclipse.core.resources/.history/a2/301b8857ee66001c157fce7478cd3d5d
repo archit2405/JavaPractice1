@@ -1,0 +1,175 @@
+package test;
+import java.util.*;
+public class medianOfRunningDataStream {
+	public static Scanner sc=new Scanner(System.in);
+	public static int countMinheap=-1;
+	public static int countMaxheap=-1;
+	public static void swap(int[]array,int index1,int index2)
+	{
+		int temp;
+		temp=array[index2];
+		array[index2]=array[index1];
+		array[index1]=temp;
+	}
+	public static void maxHeapify(int[]maxHeap)
+	{
+		int length=maxHeap.length;
+		int i=0;
+		while(i<length)
+		{
+			if((maxHeap[i]<maxHeap[(2*i)+1]||maxHeap[i]<maxHeap[(2*i)+1]) && maxHeap[i]!=0)
+			{
+				if((maxHeap[(2*i)+1]!=0)||(maxHeap[(2*i)+2]!=0))
+				{
+					int big;
+					if(maxHeap[(2*i)+1]<maxHeap[(2*i)+2])
+						big=(2*i)+1;
+					else
+						big=(2*i)+2;
+					swap(maxHeap,i,big);
+					i=big;
+				}
+				else
+					i++;
+					
+			}
+			else
+				i++;
+		}
+	}
+	public static void minHeapify(int[]minHeap)
+	{
+		int length=minHeap.length;
+		int i=0;
+		while(i<length)
+		{
+			if((minHeap[i]>minHeap[(2*i)+1]||minHeap[i]>minHeap[(2*i)+1]) && minHeap[i]!=0)
+			{
+				if((minHeap[(2*i)+1]!=0)||(minHeap[(2*i)+2]!=0))
+				{
+					int small;
+					if(minHeap[(2*i)+1]<minHeap[(2*i)+2])
+						small=(2*i)+1;
+					else
+						small=(2*i)+2;
+					swap(minHeap,i,small);
+					i=small;
+				}
+				else
+					i++;
+					
+			}
+			else
+				i++;
+		}
+	}
+	public static int removeRootMinHeap(int[]minHeap)
+	{
+		swap(minHeap,countMinheap,0);
+		int temp=minHeap[countMinheap--];
+		minHeapify(minHeap);
+		return temp;
+	}
+	public static int removeRootMaxHeap(int[]maxHeap)
+	{
+		swap(maxHeap,countMaxheap,0);
+		int temp=maxHeap[countMaxheap--];
+		maxHeapify(maxHeap);
+		return temp;
+	}
+	
+	public static void insert(int[]minHeap,int[]maxHeap)
+	{
+		int item;
+		System.out.println("Enter the element");
+		item=sc.nextInt();
+		if(countMinheap==-1 && countMaxheap==-1)
+		{
+			System.out.println("As the heaps are empty enter second element too");
+			int item2=sc.nextInt();
+			if(item>item2)
+			{
+				countMinheap++;
+				minHeap[countMinheap]=item;
+				countMaxheap++;
+				maxHeap[countMaxheap]=item2;
+			}
+			else
+			{
+				countMaxheap++;
+				maxHeap[countMaxheap]=item;
+				
+				countMinheap++;
+				minHeap[countMinheap]=item2;
+				
+			}
+			
+		}
+		else
+		{
+			if(item>maxHeap[0])
+			{
+				minHeap[countMinheap++]=item;
+				minHeapify(minHeap);
+			}
+			
+			else
+			{
+				maxHeap[countMaxheap++]=item;
+				maxHeapify(maxHeap);
+			}
+		}
+		if(Math.abs(countMaxheap-countMinheap)>1)
+		{
+			if(countMaxheap>countMinheap)
+			{
+				int temp=removeRootMaxHeap(maxHeap);
+				minHeap[++countMinheap]=temp;
+				minHeapify(minHeap);
+			}
+			else
+			{
+				int temp=removeRootMinHeap(minHeap);
+				maxHeap[++countMaxheap]=temp;
+				minHeapify(maxHeap);
+			}
+		}
+			
+	}
+	public static void getMedian(int[]minHeap,int[]maxHeap)
+	{
+		if(countMaxheap==countMinheap)
+		{
+			int result=(minHeap[0]+maxHeap[0])/2;
+			System.out.println(result);
+		}
+		else
+		{
+			int result;
+			if(countMinheap>countMaxheap)
+				result=minHeap[0];
+			else
+				result=maxHeap[0];
+			System.out.println(result);
+		}
+	}
+	public static void main(String args[])
+	{
+		System.out.println("Enter the size of the data stream");
+		int n=sc.nextInt();
+		int[]minHeap=new int[n];
+		int[]maxHeap=new int[n];
+		while(true)
+		{
+			System.out.println("1.To insert 2.To get median 3. To exit");
+			int i=sc.nextInt();
+			if(i==1)
+				insert(minHeap,maxHeap);
+			if(i==2)
+				getMedian(minHeap,maxHeap);
+			if(i==3)
+				System.exit(0);
+		}
+	}
+
+}

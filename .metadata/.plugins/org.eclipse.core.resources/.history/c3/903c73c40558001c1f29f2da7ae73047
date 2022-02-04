@@ -1,0 +1,110 @@
+package test;
+import java.util.*;
+public class tree
+{
+	public static class Node
+	{
+		int data;
+		Node left,right;
+		Node(int data)
+		{
+			this.data=data;
+			right=left=null;
+		}
+	}
+	public static Node root=null;
+	public static Node insertInTree(int data,Node node)
+	{
+		if(node==null)
+		{
+			return new Node(data);
+		}
+		if(node.data>data)
+		{
+			node.left=insertInTree(data,node.left);
+		}
+		else if(node.data<data)
+		{
+			node.right=insertInTree(data,node.right);
+		}
+		else
+			return node;
+		return node;
+	}
+	static int diameter=0;
+	static int maxdiameter=0;
+	public static int getDiameter(Node node)
+	{
+		if(node==null)
+			return 0;
+		int left_height=getDiameter(node.left);
+		int right_height=getDiameter(node.right);
+		diameter=left_height+right_height+1;
+		if(diameter>maxdiameter)
+			maxdiameter=diameter;
+		return 1+Math.max(left_height, right_height);
+	}
+	public static void inOrder(Node node)
+	{
+		if(node!=null)
+		{
+			inOrder(node.left);
+			System.out.print(node.data+" ");
+			inOrder(node.right);
+		}
+	}
+	public static class List
+	{
+		int size,min,max;
+		boolean isBST;
+		List(int size,int min,int max,boolean isBST)
+		{
+			this.size=size;
+			this.min=min;
+			this.max=max;
+			this.isBST=isBST;
+		}
+	}
+	public static List largestBST(Node node)
+	{
+		if(node==null)
+		{
+			return(new List(0,Integer.MIN_VALUE,Integer.MAX_VALUE,true));
+		}
+		if(node.left==null&&node.right==null)
+		{
+			return(new List(1,node.data,node.data,true));
+		}
+		
+		List left=largestBST(node.left);
+		List right=largestBST(node.right);
+		
+		List ret=new List((1+right.size+left.size),0,0,false);
+		
+		if(left.isBST && right.isBST && left.max<node.data && right.min>node.data)
+		{
+			ret.isBST=true;
+			ret.min=Math.min(left.min,node.data);
+			ret.max=Math.max(right.max,node.data);
+			
+			return ret;
+			
+		}
+		return ret;
+	}
+	public static void main(String args[])
+	{
+		root=new Node(50);
+		root.left=new Node(30);
+		root.right=new Node(60);
+		root.left.left=new Node(5);
+		root.left.right=new Node(20);
+		root.right.left=new Node(45);
+		root.right.right=new Node(70);
+		root.right.right.left=new Node(65);
+		root.right.right.right=new Node(80);
+		List result=largestBST(root);
+		System.out.println(result.size);
+	}
+
+}

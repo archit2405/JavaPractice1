@@ -1,0 +1,73 @@
+package Graph;
+import java.util.*;
+public class SnakeLadderProblem {
+	public static Scanner sc=new Scanner(System.in);
+	
+	public static int minThrow=Integer.MAX_VALUE;
+	
+	public static void calculateMinThrow(int[]board,int pos,int t,boolean[]visited)
+	{
+		System.out.println(t);
+		if(pos>29)
+			return;
+		if(pos==29)
+		{
+			if(t<=minThrow)
+			{
+				minThrow=t;
+			}
+			return;
+		}
+			
+		if(visited[pos]==true)
+			return;
+		
+		visited[pos]=true;
+		if(board[pos]!=-1)
+		{
+			calculateMinThrow(board,board[pos],t,visited);
+		}
+		else
+		{
+		calculateMinThrow(board,pos+1,t+1,visited);
+		calculateMinThrow(board,pos+2,t+1,visited);
+		calculateMinThrow(board,pos+3,t+1,visited);
+		calculateMinThrow(board,pos+4,t+1,visited);
+		calculateMinThrow(board,pos+5,t+1,visited);
+		calculateMinThrow(board,pos+6,t+1,visited);
+		}
+		
+		
+	}
+	
+	
+	public static void main(String[] args) 
+	{
+		
+		//Inputing all the ladders and snake
+		
+			int N = 30; 
+			int board[] = new int[N]; 
+	        for (int i = 0; i < N; i++) 
+	        {
+	        	 board[i] = -1; 
+	        }  
+	      //Ladders 
+	        board[2] = 21; 
+	        board[4] = 7; 
+	        board[10] = 25; 
+	        board[19] = 28; 
+	  
+	        //Snakes 
+	        board[26] = 0; 
+	        board[20] = 8; 
+	        board[16] = 3; 
+	        board[18] = 6;  
+	        
+	        boolean[]visited=new boolean[31];
+	        
+	        calculateMinThrow(board,0,0,visited);
+	        System.out.println(minThrow);
+	}
+
+}

@@ -1,0 +1,194 @@
+package test;
+import java.util.*;
+public class tree
+{
+	public static class Node
+	{
+		int data;
+		Node left,right;
+		Node(int data)
+		{
+			this.data=data;
+			right=left=null;
+		}
+	}
+	public static Node root=null;
+	public static Node insertInTree(int data,Node node)
+	{
+		if(node==null)
+		{
+			return new Node(data);
+		}
+		if(node.data>data)
+		{
+			node.left=insertInTree(data,node.left);
+		}
+		else if(node.data<data)
+		{
+			node.right=insertInTree(data,node.right);
+		}
+		else
+			return node;
+		return node;
+	}
+	static int diameter=0;
+	static int maxdiameter=0;
+	public static int getDiameter(Node node)
+	{
+		if(node==null)
+			return 0;
+		int left_height=getDiameter(node.left);
+		int right_height=getDiameter(node.right);
+		diameter=left_height+right_height+1;
+		if(diameter>maxdiameter)
+			maxdiameter=diameter;
+		return 1+Math.max(left_height, right_height);
+	}
+	public static void inOrder(Node node)
+	{
+		if(node!=null)
+		{
+			inOrder(node.left);
+			System.out.print(node.data+" ");
+			inOrder(node.right);
+		}
+	}
+	public static class List
+	{
+		int size,min,max;
+		boolean isBST;
+		List(int size,int min,int max,boolean isBST)
+		{
+			this.size=size;
+			this.min=min;
+			this.max=max;
+			this.isBST=isBST;
+		}
+	}
+	public static List largestBST(Node node)
+	{
+		if(node==null)
+		{
+			return(new List(0,Integer.MAX_VALUE,Integer.MIN_VALUE,true));
+		}
+		if(node.left==null&&node.right==null)
+		{
+			return(new List(1,node.data,node.data,true));
+		}
+		
+		List left=largestBST(node.left);
+		List right=largestBST(node.right);
+		
+		List ret=new List((1+right.size+left.size),0,0,false);
+		if(left.isBST==false)
+		{
+			ret.size=right.size;
+		}
+		if(right.isBST==false)
+		{
+			ret.size=left.size;
+		}
+		
+		if(left.isBST && right.isBST && left.max<node.data && right.min>node.data)
+		{
+			ret.isBST=true;
+			ret.min=Math.min(left.min,node.data);
+			ret.max=Math.max(right.max,node.data);
+			
+			return ret;
+			
+		}
+		return ret;
+	}
+	static int printedLevel=0;
+	public static void printLeftView(Node node,int level)
+	{
+		if(node==null)
+			return;
+		if(level>printedLevel)
+		{
+			System.out.println(node.data);
+			printedLevel=level;
+		}
+		printLeftView(node.left,level+1);
+		printLeftView(node.right,level+1);
+	}
+	public static void printRightView(Node node,int level)
+	{
+		if(node==null)
+			return;
+		if(level>printedLevel)
+		{
+			System.out.println(node.data);
+			printedLevel=level;
+		}
+		printRightView(node.right,level+1);
+		printRightView(node.left,level+1);
+	}
+	public static class parentNode
+	{
+		Node parent;
+		int level;
+		boolean found=false;
+		parentNode(Node parent,int level,boolean found)
+		{
+			this.parent=parent;
+			this.level=level;
+			this.found=found;
+		}
+		
+	}
+	public static parentNode checkParent(Node node,int data,int level)
+	{
+		if(node==null)
+			return new parentNode(null,0,false);
+		if(node.left.data==data||node.right.data==data)
+			return new parentNode(node,level+1,true);
+		parentNode left,right;
+		left=checkParent(node.left,data,level+1);
+		right=checkParent(node.right,data,level+1);
+		
+		if(left.found==true)
+			return left;
+		else if(right.found==true)
+			return right;
+		else
+			return null;
+		
+	}
+	public static void main(String args[])
+	{
+		Scanner sc=new Scanner(System.in);
+		root=new Node(50);
+		root.left=new Node(30);
+		root.right=new Node(60);
+		root.left.left=new Node(5);
+		root.left.right=new Node(20);
+		root.right.left=new Node(45);
+		root.right.right=new Node(70);
+		root.right.right.left=new Node(65);
+		root.right.right.right=new Node(80);
+		//List result=largestBST(root);
+		//System.out.println(result.size);
+		//printLeftView(root,1);
+		//printRightView(root,1);
+		int data1,data2;
+		System.out.println("Enter the data1");
+		data1=sc.nextInt();
+		System.out.println("Enter the data2");
+		data2=sc.nextInt();
+		parentNode parent1,parent2;
+		parent1=checkParent(root,data1,0);
+		parent2=checkParent(root,data2,0);
+		if((parent1.parent.data!=parent2.parent.data)&&(parent1.level==parent2.level))
+		{
+			System.out.println("yes nodes are siblings");
+		}
+		else
+		{
+			System.out.println("No the nodes are not siblings");
+		}
+	}
+	
+
+}

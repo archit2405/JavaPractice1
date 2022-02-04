@@ -1,0 +1,289 @@
+package test;
+import java.util.*;
+public class tree{
+	public static class Node
+	{
+		int data;
+		Node right,left;
+		Node(int data)
+	
+		{
+			this.data=data;
+			right=left=null;
+		}
+	}
+	static Node root=null;
+	public static Node Insert(int data,Node node)
+	{
+		if(node==null)
+			return new Node(data);
+		else
+		{
+			if(data>node.data)
+				node.right=Insert(data,node.right);
+			else if(data<node.data)
+				node.left=Insert(data,node.left);
+			else
+				return node;
+		}
+		return node;
+	}
+	public static void inOrder(Node node)
+	{
+		if(node==null)
+			return;
+		else
+		{
+			inOrder(node.left);
+			System.out.print(node.data+" ");
+			inOrder(node.right);
+		}
+	}
+	
+	public static void printKDistance(Node node,int[]array,boolean[]visited,int count,int k)
+	{
+		if(node==null)
+			return;
+		array[count]=node.data;
+		visited[count]=false;
+		
+		if(node.left==null && node.right==null&& count-k>=0&&visited[count-k]==false)
+		{
+			System.out.print(array[count-k]+" ");
+			visited[count-k]=true;
+			return;
+			}
+			printKDistance(node.left,array,visited,count+1,k);
+			printKDistance(node.right,array,visited,count+1,k);
+			
+		
+	}
+	public static void leftInternalNodes(Node node)
+	{
+		if(node!=null)
+		{
+			if(node.left!=null)
+			{
+				System.out.print(node.data+" ");
+				leftInternalNodes(node.left);
+			}
+			else if(node.right!=null)
+			{
+				System.out.print(node.data+" ");
+				leftInternalNodes(node.right);
+			}
+		}
+	}
+	public static void rightInternalNodes(Node node)
+	{
+		if(node!=null)
+		{
+			if(node.right!=null)
+			{
+				rightInternalNodes(node.right);
+				System.out.print(node.data+" ");
+			}
+			else if(node.left!=null)
+			{
+				rightInternalNodes(node.left);
+				System.out.print(node.data+" ");
+			}
+		}
+	}
+	public static void leafNodes( Node node)
+	{
+		if(node!=null)
+		{
+			leafNodes(node.left);
+			if(node.left==null && node.right==null)
+				System.out.print(node.data+" ");
+			leafNodes(node.right);
+		}
+	}
+	public static void printBoundaryNodes(Node node)
+	{
+		System.out.print(node.data+" ");
+		leftInternalNodes(node.left);
+		leafNodes(node);
+		rightInternalNodes(node.right);
+	}
+	static boolean isValid=true;
+	public static void validBST(Node node)
+	{
+		if(node==null)
+			return;
+		if(node.left==null&&node.right==null)
+			return;
+			validBST(node.left);
+			if(node.left!=null)
+			{
+				if(node.left.data>node.data)
+					isValid=false;
+			}
+			if(node.right!=null)
+			{
+				if(node.right.data<node.data)
+					isValid=false;
+			}
+			validBST(node.right);
+	}
+	public static class Nodelevel
+	{
+		int data;
+		int level;
+		Nodelevel(int data,int level)
+		{
+			this.data=data;
+			this.level=level;
+		}
+	}
+	public static void bottomView(Node node,int distance,int level,HashMap<Integer,Nodelevel>map)
+	{
+		if(node==null)
+			return;
+		else
+		{
+			if(!map.containsKey(distance))
+			{
+				Nodelevel obj=new Nodelevel(node.data,level);
+				map.put(distance,obj);
+			}
+			else if(map.get(distance).level<level)
+			{
+				map.get(distance).data=node.data;
+				map.get(distance).level=level;
+			}		
+		}
+		bottomView(node.left,distance-1,level+1,map);
+		bottomView(node.right,distance+1,level+1,map);
+	}
+	public static int lowestCommonAncestor(Node node,int data1,int data2)
+	{
+		int left,right;
+		if(node==null)
+		{
+			left=0;
+			right=0;
+			return 0;
+		}
+		left=lowestCommonAncestor(node.left,data1,data2);
+		if(node.data==data1||node.data==data2)
+			return node.data; 
+		right=lowestCommonAncestor(node.right,data1,data2);
+		if((left==data1&&right==data2)||(left==data2&&right==data1))
+		{
+			System.out.println(node.data+" ");
+			System.exit(0);;
+		}
+		if(left>right)
+			return left;
+		else
+			return right;
+		
+	}
+	static int current=8;
+	public static int findInInorder(int[]inorder,int data)
+	{
+		for(int i=0;i<inorder.length;i++)
+		{
+			if(inorder[i]==data)
+				return i;
+		}
+		return 0;
+	}
+	public static Node buildTree(int[]inorder,int[]postorder,int start,int end)
+	{
+		if(start>end)
+			return null;
+		current--;
+		Node node=new Node(postorder[current]);
+		if(start==end)
+			return node;
+		int index=findInInorder(inorder,node.data);
+		node.right=buildTree(inorder,postorder,index+1,end);
+		node.left=buildTree(inorder,postorder,start,index-1);
+		return node;
+	}
+	
+    public static void main(String args[])
+	{
+		Scanner sc=new Scanner(System.in);
+		/*System.out.println("Enter the number of elements to be inserted in the binary  tree");
+		int n=sc.nextInt();
+		for(int i=0;i<n;i++)
+			root=Insert(sc.nextInt(),root);
+		inOrder(root);
+		System.out.println();
+		int count=0;
+		int[] array=new int[10];
+		boolean[] visited=new boolean[10];
+		System.out.println("Enter the value of k");
+		int k=sc.nextInt();
+		printKDistance(root,array,visited,count,k);*/
+		//printBoundaryNodes(root);
+		root=new Node(12);
+		root.left=new Node(4);
+		root.right=new Node(25);
+		root.left.left=new Node(13);
+		root.left.right=new Node(9);
+		root.left.left.left=new Node(2);
+		root.left.right.left=new Node(26);
+		root.left.right.right=new Node(22);
+		root.right.left=new Node(16);
+		root.right.right=new Node(32);
+		/*validBST(root);
+		if(isValid==false)
+			System.out.println("Not a valid BST");
+		else
+			System.out.println("Valid BST");
+		HashMap<Integer,Nodelevel>map=new HashMap<Integer,Nodelevel>();
+		bottomView(root,0,0,map);
+		for(Map.Entry<Integer,Nodelevel>entry:map.entrySet())
+		{
+			System.out.println(entry.getKey()+" "+entry.getValue().data);
+		}*/
+		System.out.println("Enter the value of two nodes");
+		int data1=sc.nextInt();
+		int data2=sc.nextInt();
+		int a=lowestCommonAncestor(root,data1,data2);
+		/*int[]postorder=new int[8];
+		int[]inorder=new int[8];
+		System.out.println("Enter the elements of the postorder");
+		for(int i=0;i<postorder.length;i++)
+		{
+			postorder[i]=sc.nextInt();
+		}
+		System.out.println("Enter the leements of the inorder");
+		for(int i=0;i<inorder.length;i++)
+		{
+			inorder[i]=sc.nextInt();
+		}
+		root=buildTree(inorder,postorder,0,7);
+		inOrder(root);*/
+		
+		
+		
+		
+	}
+	}
+    
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		

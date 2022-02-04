@@ -1,0 +1,133 @@
+package Graph;
+import java.util.*;
+public class AutoCompleteSuggestion {
+	public static Scanner sc=new Scanner(System.in);
+	
+	public static class trie
+	{
+		boolean isEnd;
+		HashMap<Character,trie>triemap;
+		public trie()
+		{
+			isEnd=false;
+			triemap=new HashMap<Character,trie>();
+		}
+	}
+	
+	public static int flag=0;
+	public static int flag2=0;
+	
+	public static trie root=new trie();
+	
+	public static void insertTrie(trie mytrie,String str,int index)
+	{
+		if(index==str.length())
+		{
+			mytrie.isEnd=true;
+			return;
+		}
+			
+		
+		char c=str.charAt(index);
+		if(flag==0)
+		{
+			flag=1;
+			trie child=new trie();
+			mytrie.triemap.put(c,child);
+			mytrie=mytrie.triemap.get(c);
+			insertTrie(mytrie,str,index+1);
+		}
+		else
+		{
+			if(mytrie.triemap.containsKey(c))
+			{
+				mytrie=mytrie.triemap.get(c);
+				insertTrie(mytrie,str,index+1);
+			}
+			else
+			{
+				trie child=new trie();
+				mytrie.triemap.put(c, child);
+				mytrie=mytrie.triemap.get(c);
+				insertTrie(mytrie,str,index+1);
+			}
+		}
+	}
+	
+	public static void printTrieSuggestions2(trie node)
+	{
+		if(node.isEnd==true)
+			return;
+		else
+		{
+			HashMap<Character,trie>map;
+			map=node.triemap;
+			for(Map.Entry<Character,trie>m:map.entrySet())
+			{
+				System.out.print(m.getKey());
+				node=map.get(m.getKey());
+				break;
+			}
+			printTrieSuggestions2(node);
+		}
+	}
+	
+	public static void printTrieSuggestions(trie node,String prefix,int index)
+	{
+		
+		
+			char c=prefix.charAt(index);
+			if(node.triemap.containsKey(c))
+			{
+				//System.out.print(c);
+				
+				if(index==prefix.length()-1)
+				{
+					System.out.print(c);
+					HashMap<Character,trie>map;
+					map=node.triemap;
+					for(Map.Entry<Character,trie>m:map.entrySet())
+					{
+						if(flag2==1)
+						{
+							System.out.print(prefix);
+						}
+						printTrieSuggestions2(m.getValue());
+						System.out.println();
+						flag2=1;
+					}
+					return;
+				}
+				else
+				{
+					node=node.triemap.get(c);
+					index++;
+					System.out.print(c);
+					printTrieSuggestions(node,prefix,index);
+				}
+				
+			}
+			else
+				return;
+		}
+	public static void main(String[] args) 
+	{
+		int n;
+		System.out.println("Enter the number of strings that is to be put in trie");
+		n=sc.nextInt();
+		sc.nextLine();
+		for(int i=0;i<n;i++)
+		{
+			System.out.println("Enter the "+i+"th string");
+			String flag=sc.nextLine();
+			insertTrie(root,flag,0);
+		}
+		//Taking input for the prefix for generating suggestion
+		System.out.println("Enter the prefix");
+		String prefix=sc.nextLine();
+		System.out.println(prefix.length());
+		printTrieSuggestions(root,prefix,0);
+	}
+	
+
+}
